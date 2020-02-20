@@ -10,10 +10,12 @@ class RecNet(nn.Module):
                  inp_dim,
                  hid_dim,
                  out_dim,
+                 out_seq,
                  num_layers,
                  drop_prob=0.2):
         super(RecNet, self).__init__()
         self.hid_dim = hid_dim
+        self.out_seq = out_seq
         # self.orig_dim = orig_dim
         self.num_layers = num_layers
 
@@ -25,7 +27,7 @@ class RecNet(nn.Module):
 
     def forward(self,x,h):
         out, h = self.gru(x,h)
-        out = self.relu(out[:,-1:,:])
+        out = self.relu(out[:,-1*self.out_seq:,:])
         y = self.classifier(out)
         # y = self.softmax(out)
         return [y, h]
