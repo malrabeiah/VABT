@@ -97,6 +97,7 @@ with torch.cuda.device(options_dict['gpu_idx']):
         net = RecNet(options_dict['embed_dim'],
                      options_dict['hid_dim'],
                      options_dict['out_dim'],
+                     options_dict['out_seq'],
                      options_dict['num_rec_lay'],
                      options_dict['drop_prob'])
         net = net.cuda()
