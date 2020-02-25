@@ -23,7 +23,7 @@ class RecNet(nn.Module):
         self.gru = nn.GRU(inp_dim,hid_dim,num_layers,batch_first=True,dropout=drop_prob)
         self.classifier = nn.Linear(hid_dim,out_dim)
         self.relu = nn.ReLU()
-        # self.softmax = nn.Softmax(dim=1)--> This is commented out because softmax is implemented in the definition of cross entropy
+        # self.softmax = nn.Softmax(dim=1)--> This is commented out because softmax is implemented in the definition of cross entropy (Line 34 in model_train.py)
 
     def forward(self,x,h):
         out, h = self.gru(x,h)
