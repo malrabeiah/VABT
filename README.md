@@ -2,7 +2,7 @@
 The baseline solution for the ViWi-Vision Aided Beam Tracking (ViWi-BT) task. Please see [ViWi Vision-Aided mmWave Beam Tracking: Dataset, Task, and Baseline Solutions](https://arxiv.org/abs/2002.02445) for more details.
 
 # Dependecies
-1) Python 3.6 and later.
+1) Python 3.7 and later.
 
 2) PyTorch 1.3 and later (with torchvision).
 
