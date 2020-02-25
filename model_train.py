@@ -5,93 +5,6 @@ import torch.optim as optimizer
 import numpy as np
 import time
 
-def modelTrain2(net, trn_loader,options_dict):
-    """
-
-    :param net:
-    :param trn_loader:
-    :param options_dict:
-    :return:
-    """
-    # Optimizer:
-    # ----------
-
-    if options_dict['solver'] == 'Adam':
-        opt = optimizer.Adam(net.parameters(),
-                             lr=options_dict['lr'],
-                             weight_decay=options_dict['wd'],
-                             amsgrad=True)
-    else:
-        ValueError('Not recognized solver')
-
-    scheduler = optimizer.lr_scheduler.MultiStepLR(opt,
-                                                   milestones=options_dict['lr_sch'],
-                                                   gamma=options_dict['lr_drop_factor'])
-
-    # Define training loss:
-    # ---------------------
-
-    criterion = nn.CrossEntropyLoss()
-
-    # Initialize training hyper-parameters:
-    # -------------------------------------
-
-    itr = 0
-    h = net.initHidden(options_dict['batch_size'])
-    h = h.cuda()
-    embed = nn.Embedding(options_dict['cb_size'], options_dict['embbed_dim'])
-    running_train_loss = []
-    running_trn_top_1 = []
-    running_val_top_1 = []
-    train_loss_ind = []
-    val_acc_ind = []
-
-    print('------------------------------- Commence Training ---------------------------------')
-    t_start = time.clock()
-    net.train()
-    for epoch in range(options_dict['num_epochs']):
-
-        for batch, (x,y) in enumerate(trn_loader):
-            itr += 1
-            init_beams = y[:,:-1].type(torch.LongTensor)
-            inp_beams = embed(init_beams)
-            inp_beams = inp_beams.cuda()
-            targ = y[:,-1].view(-1).type(torch.LongTensor)
-            targ = targ.cuda()
-            inp_img = x[:,:-1,:,:,:].cuda()
-            h = h.data.cuda()
-
-            opt.zero_grad()
-            out, h = net.forward(inp_img,inp_beams, h)
-            train_loss = criterion(out, targ)  # (pred, target)
-            train_loss.backward()
-            opt.step()
-            pred_beams = torch.argmax(out, dim=1)
-            top_1_acc = torch.sum(pred_beams == targ, dtype=torch.float) / targ.shape[0]
-            if np.mod(itr, options_dict['coll_cycle']) == 0:  # Data collection cycle
-                running_train_loss.append(train_loss.item())
-                running_trn_top_1.append(top_1_acc)
-                train_loss_ind.append(itr)
-            if np.mod(itr, options_dict['display_freq']) == 0:  # Display frequency
-                print(
-                    'Epoch No. {0}--Iteration No. {1}-- Mini-batch loss = {2:10.9f} and Top-1 accuracy = {3:5.4f}'.format(
-                        epoch + 1,
-                        itr,
-                        train_loss.item(),
-                        top_1_acc)
-                )
-
-            # # Validation:
-            # # -----------
-            # if np.mod(itr, options_dict['val_freq']) == 0:  # or epoch + 1 == options_dict['num_epochs']:
-            #     val_batch_count = 0
-            #     batch_score = 0
-            #     val_batches_per_epoch = np.ceil(
-            #     np.divide(options_dict['test_size'], options_dict['val_batch_size']))
-            #     with torch.no_grad():
-            #         net.eval()
-
-
 
 def modelTrain1(net,trn_loader,val_loader,options_dict):
     """
@@ -117,6 +30,7 @@ def modelTrain1(net,trn_loader,val_loader,options_dict):
 
     # Define training loss:
     # ---------------------
+    
     criterion = nn.CrossEntropyLoss()
 
     # Initialize training hyper-parameters:
