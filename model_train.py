@@ -1,10 +1,3 @@
-'''
-Model training script.
---------------------------
-Author: Muhammad Alrabeiah
-Jan 2020
-'''
-
 import torch
 import torch.nn as nn
 import torch.optim as optimizer
@@ -12,8 +5,7 @@ import torch.optim as optimizer
 import numpy as np
 import time
 
-
-def modelTrain1(net,trn_loader,val_loader,options_dict):
+def modelTrain(net,trn_loader,val_loader,options_dict):
     """
 
     :param net:
@@ -37,7 +29,6 @@ def modelTrain1(net,trn_loader,val_loader,options_dict):
 
     # Define training loss:
     # ---------------------
-    
     criterion = nn.CrossEntropyLoss()
 
     # Initialize training hyper-parameters:

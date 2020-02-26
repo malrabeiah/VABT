@@ -7,7 +7,7 @@ Jan. 2020
 '''
 import torch
 from build_net import RecNet
-from model_train import modelTrain1
+from model_train import modelTrain
 from data_feed import DataFeed
 import torchvision.transforms as trf
 from torch.utils.data import DataLoader
@@ -63,9 +63,7 @@ options_dict = {
 
 
 # Fetch training data
-# data_samples = dataPrep(data_path='data/beam_seq_dataset_1to300_mixed.mat')
-# options_dict['train_size'] = data_samples['trn_inp'].shape[0]
-# options_dict['test_size'] = data_samples['tst_inp'].shape[0]
+
 resize = trf.Resize((options_dict['img_dim'][1],options_dict['img_dim'][2]))
 normalize = trf.Normalize(mean=options_dict['img_mean'],
                           std=options_dict['img_std'])
@@ -99,15 +97,16 @@ with torch.cuda.device(options_dict['gpu_idx']):
                      options_dict['out_dim'],
                      options_dict['out_seq'],
                      options_dict['num_rec_lay'],
-                     options_dict['drop_prob'])
+                     options_dict['drop_prob'],
+                     )
         net = net.cuda()
 
     # Train and test:
     # ---------------
-    net, options_dict, train_info = modelTrain1(net,
-                                                trn_loader,
-                                                val_loader,
-                                                options_dict)
+    net, options_dict, train_info = modelTrain(net,
+                                               trn_loader,
+                                               val_loader,
+                                               options_dict)
 
     # Plot progress:
     if options_dict['prog_plot']:

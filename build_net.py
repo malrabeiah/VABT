@@ -1,14 +1,5 @@
-'''
-Construct RNN for beam tracking
----------------------------
-Author: Muhammad Alrabeiah
-Jan 2020
-'''
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-import torchvision.models as trn_models
-import numpy as np
 
 # Beam prediction model relying on input beam sequences alone
 class RecNet(nn.Module):
@@ -29,7 +20,7 @@ class RecNet(nn.Module):
         self.gru = nn.GRU(inp_dim,hid_dim,num_layers,batch_first=True,dropout=drop_prob)
         self.classifier = nn.Linear(hid_dim,out_dim)
         self.relu = nn.ReLU()
-        # self.softmax = nn.Softmax(dim=1)--> This is commented out because softmax is implemented in the definition of cross entropy (Line 41 in model_train.py)
+        # self.softmax = nn.Softmax(dim=1)
 
     def forward(self,x,h):
         out, h = self.gru(x,h)
