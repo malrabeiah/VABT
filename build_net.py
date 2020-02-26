@@ -1,3 +1,7 @@
+'''
+Author: Muhammad Alrabeiah
+Jan. 2020
+'''
 import torch
 import torch.nn as nn
 
@@ -20,7 +24,7 @@ class RecNet(nn.Module):
         self.gru = nn.GRU(inp_dim,hid_dim,num_layers,batch_first=True,dropout=drop_prob)
         self.classifier = nn.Linear(hid_dim,out_dim)
         self.relu = nn.ReLU()
-        # self.softmax = nn.Softmax(dim=1)
+        # self.softmax = nn.Softmax(dim=1)--> Softmax is implicitly implemented into the cross entropy loss
 
     def forward(self,x,h):
         out, h = self.gru(x,h)
